@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Exploring AWS Services in Web Development</title>
+    <!-- Styling for the client UI -->
+    <style>
+        body {
+            background-color: #222629;
+            font-family: system-ui;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+        label {
+            color: #86C232;
+            font-size: 20px;
+            display: block;
+            margin: 20px 0 10px 0;
+        }
+        button {
+            background-color: #86C232;
+            border-color: #86C232;
+            color: #FFFFFF;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            font-size: 20px;
+            padding: 5px;
+            width: 150px;
+        }
+        .services-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin: 20px 0;
+            transition: background-color 0.3s ease;
+        }
+        .services-button:hover {
+            background-color: #45a049;
+        }
+        .service {
+            display: none;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            color: #000;
+            margin: 10px auto;
+            max-width: 600px;
+            text-align: left;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .service.active {
+            display: block;
+        }
+        .service:hover {
+            transform: scale(1.2);
+        }
+        .popup {
+            display: none;
+            position: relative;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            color: #000;
+            margin-top: 10px;
+        }
+        .active-popup {
+            display: block;
+        }
+        footer {
+            margin-top: 50px;
+            color: #ddd;
+        }
+    </style>
+    <script>
+        // callAPI function that takes the base and exponent numbers as parameters
+        var callAPI = (base, exponent) => {
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built-in JSON utility package, turn object to string and store in a variable
+            var raw = JSON.stringify({"base": base, "exponent": exponent});
+            // create a JSON object with parameters for API call and store in a variable
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            // make API call with parameters and use promises to get response
+            fetch("https://73f9qjdgug.execute-api.us-east-1.amazonaws.com/dev", requestOptions)
+                .then(response => response.text())
+                .then(result => alert(JSON.parse(result).body))
+                .catch(error => console.log('error', error));
+        }
+
+        function toggleServices() {
+            var services = document.querySelectorAll('.service');
+            services.forEach(function(service) {
+                service.classList.toggle('active');
+            });
+        }
+
+        function togglePopup(id) {
+            var popup = document.getElementById(id + '-popup');
+            var isActive = popup.classList.toggle('active-popup');
+            
+            // Hide all other popups
+            var allPopups = document.querySelectorAll('.popup');
+            allPopups.forEach(function(p) {
+                if (p.id !== id + '-popup' && p.classList.contains('active-popup')) {
+                    p.classList.remove('active-popup');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Exploring AWS Services in Web Development</h1>
+    <form>
+        <label>Base number:</label>
+        <input type="text" id="base">
+        <label> To the power of:</label>
+        <input type="text" id="exponent">
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="callAPI(document.getElementById('base').value,document.getElementById('exponent').value)">CALCULATE</button>
+    </form>
+    <p style="color: #86C232; font-size: 20px;">
+        Welcome to my GitHub project showcasing my cloud skills through the implementation of AWS services.
+    </p>
+    <button class="services-button" onclick="toggleServices()">Services Used</button>
+    <div class="service" id="amplify" onclick="togglePopup('amplify')">
+        <p><strong>AWS Amplify:</strong> Manages the full application lifecycle, including continuous deployment, for front-end web and mobile applications.</p>
+        <div class="popup" id="amplify-popup">
+            <p>Amplify allows easily set up and manage AWS services like authentication, APIs, and hosting application. It simplifies development with built-in CLI and libraries.</p>
+        </div>
+    </div>
+    <div class="service" id="apiGateway" onclick="togglePopup('apiGateway')">
+        <p><strong>API Gateway:</strong> Provides a fully managed service to create, publish, maintain, monitor, and secure APIs at any scale.</p>
+        <div class="popup" id="apiGateway-popup">
+            <p>API Gateway simplifies the creation and management of APIs that enable applications to access data, business logic, or functionality from backend services. It integrates seamlessly with AWS Lambda and other services.</p>
+        </div>
+    </div>
+    <div class="service" id="lambda" onclick="togglePopup('lambda')">
+        <p><strong>AWS Lambda:</strong> Executes code in response to events, such as changes to data in Amazon DynamoDB tables.</p>
+        <div class="popup" id="lambda-popup">
+            <p>Lambda lets run code without provisioning or managing servers. It automatically scales application by running code in response to each trigger, such as HTTP requests via API Gateway.</p>
+        </div>
+    </div>
+    <div class="service" id="iam" onclick="togglePopup('iam')">
+        <p><strong>AWS IAM (Identity and Access Management):</strong> Controls access to AWS services and resources securely.</p>
+        <div class="popup" id="iam-popup">
+            <p>IAM helps in securely control access to AWS services and resources for users. It can create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources.</p>
+        </div>
+    </div>
+    <div class="service" id="dynamoDB" onclick="togglePopup('dynamoDB')">
+        <p><strong>Amazon DynamoDB:</strong> A fast and flexible NoSQL database service for all applications that need consistent, single-digit millisecond latency at any scale.</p>
+        <div class="popup" id="dynamoDB-popup">
+            <p>DynamoDB is designed to provide low-latency data access and can handle large volumes of traffic, making it suitable for various application workloads, including web and mobile apps, gaming, ad tech, and IoT.</p>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright &copy; 2024 Sai Preetham Damireddy</p>
+    </footer>
+</body>
+</html>
